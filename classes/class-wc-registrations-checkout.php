@@ -40,6 +40,13 @@ class WC_Registrations_Checkout {
 		 * Display field value on the order edit page
 		 */
 		add_action( 'woocommerce_admin_order_data_after_billing_address', __CLASS__ . '::registrations_field_display_admin_order_meta', 10, 1 );
+
+		/**
+		 * Endpoints and form handler
+		 */
+		add_action( 'init', __CLASS__ . '::add_endpoints' );
+
+		add_action( 'template_redirect', __CLASS__ . '::activation_template_redirect' );
 	}
 
 	/**
@@ -194,7 +201,7 @@ class WC_Registrations_Checkout {
 			if ( $group = Groups_Group::read_by_name( $group_name ) ) {
 			    $group_id = $group->group_id;
 			}
-			
+
 			if( !empty( $group_id ) ) {
 				foreach( $users as $user_id ) {
 					Groups_User_Group::create( array( 'user_id' => $user_id, 'group_id' => $group_id ) );
@@ -256,6 +263,23 @@ class WC_Registrations_Checkout {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Add endpoints for query vars
+	 */
+	public static function add_endpoints() {
+		add_rewrite_endpoint( 'activation', EP_ROOT | EP_PAGES );
+	}
+
+	public static function activation_template_redirect() {
+        global $wp_query;
+
+        // if this is not a request for activation or it's not a singular object then bail
+        if ( ! isset( $wp_query->query_vars['activation'] ) || !is_page() )
+            return;
+
+		include_once plugin_dir_path( __FILE__ ) . '../templates/registrations/registrations-user-activation.php';
 	}
 }
 
