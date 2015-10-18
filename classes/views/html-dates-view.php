@@ -1,6 +1,6 @@
 <?php
     /*
-     *  Turmas/Dates - Admin Tab View
+     *  Dates - Admin Tab View
      */
     global $thepostid, $post, $woocommerce, $wc_product_attributes;
 
@@ -38,11 +38,10 @@
         <div class="general_dates">
 
             <!-- Hidden Fields -->
-            <input type="hidden" id="hidden_name" class="attribute_name" name="attribute_names[0]" value="<?php echo $name; ?>">
-            <input type="hidden" id="hidden_position" name="attribute_position[0]" class="attribute_position" value="0">
+            <input type="hidden" id="hidden_name" name="attribute_names[0]" value="<?php echo $name; ?>">
+            <input type="hidden" id="hidden_position" name="attribute_position[0]" value="0">
             <input type="hidden" id="hidden_taxonomy" name="attribute_is_taxonomy[0]" value="0">
-            <input type="hidden" id="hidden_visibility" name="attribute_visibility[0]" value="0">
-            <input type="hidden" id="hidden_variation" class="checkbox" name="attribute_variation[0]" value="1" disabled="true">
+            <input type="hidden" id="hidden_variation" name="attribute_variation[0]" value="1">
             <input type="hidden" id="hidden_date" name="attribute_values[0]" value="">
 
             <!-- BEGIN: Templates -->
@@ -138,9 +137,7 @@
                 <div class="multiple_date options_group">
                     <h3><?php echo '#' . $date_id . ' - ' . __( 'Multiple Days', 'woocommerce-registrations'); ?></h3>
                     <?php
-                        //$days = explode( ',', $date->dates );
-
-                            foreach( $date->dates as $day ) :
+                        foreach( $date->dates as $day ) :
                     ?>
                         <p class="form-field multiple_date_inputs">
                             <label for="event_start_date"><?php _e( 'Day', 'woocommerce-registrations'); ?></label>
