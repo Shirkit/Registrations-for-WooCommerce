@@ -36,7 +36,7 @@ jQuery( function( $ ) {
 				$( 'body' ).on( 'woocommerce_added_attribute' , this.adjust_attributes_index );
 			}
 
-			// Make sure the "Used for variations" checkbox is visible when adding attributes to a variable subscription
+			// Make sure the "Used for variations" checkbox is visible when adding attributes to a variable registration
 			if ( 'true' == WCRegistrations.isWCPre23){
 				$( 'button.add_attribute' ).on( 'click' , this.show_hide_registration_meta );
 			} else {
