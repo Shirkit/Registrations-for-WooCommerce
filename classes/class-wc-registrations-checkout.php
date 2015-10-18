@@ -22,7 +22,7 @@ class WC_Registrations_Checkout {
 	 */
 	public static function init() {
 		/**
-		 * Add the field to the checkout
+		 * Add fields to the checkout
 		 */
 		add_action( 'woocommerce_after_order_notes', __CLASS__ . '::registrations_checkout_fields' );
 
@@ -32,7 +32,7 @@ class WC_Registrations_Checkout {
 		add_action( 'woocommerce_checkout_process',  __CLASS__ . '::registrations_checkout_process');
 
 		/**
-		 * Update the order meta with field value
+		 * Update the order meta with fields values
 		 */
 		add_action( 'woocommerce_checkout_update_order_meta', __CLASS__ . '::registrations_checkout_field_update_order_meta' );
 
@@ -40,79 +40,107 @@ class WC_Registrations_Checkout {
 		 * Display field value on the order edit page
 		 */
 		add_action( 'woocommerce_admin_order_data_after_billing_address', __CLASS__ . '::registrations_field_display_admin_order_meta', 10, 1 );
-
-		/**
-		 * Endpoints and form handler
-		 */
-		add_action( 'init', __CLASS__ . '::add_endpoints' );
-
-		add_action( 'template_redirect', __CLASS__ . '::activation_template_redirect' );
 	}
 
 	/**
 	 * Adds all necessary admin styles.
 	 *
-	 * @param array Array of Product types & their labels, excluding the Subscription product type.
-	 * @return array Array of Product types & their labels, including the Subscription product type.
+	 * @param array Array of Product types & their labels, excluding the Registrations product type.
+	 * @return array Array of Product types & their labels, including the Registrations product type.
 	 * @since 1.0
 	 */
 	public static function registrations_checkout_fields( $checkout ) {
 		global $woocommerce;
 		$cart = $woocommerce->cart->get_cart();
 		$registrations = 1;
+		$qty_total = 0;
 
 		foreach( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
 			$_product = $values['data'];
 
+			//Check if is the correct product type
 			if( $_product->is_type( 'variation' ) && $_product->parent->is_type( 'registrations' ) ) {
 				$qty = $values['quantity'];
+				$qty_total = $values['quantity'];
 
+				// The first registration of all products
+				if( $registrations == 1 ) {
+					echo '<div class="registration-section">';
+					echo '<h3 class="registration-section-title">' . __( 'Attendees details', 'woocommerce-registrations' ) . '</h3>';
+					echo '<p class="registration-section-description">' . __( 'Provide the details of each participant', 'woocommerce-registrations' ) . '</p>';
+				}
+
+				//Loop through the quantity of the product in the cart
 				for( $i = 1; $i <= $qty; $i++, $registrations++ ) {
 
+					//If it's the first product, open the div
 					if( $i == 1 ) {
 						$date = get_post_meta( $_product->variation_id, 'attribute_dates', true );
 
 						if( $date ) {
-							echo '<div id="registrations_fields"><h2>' . sprintf( __( 'Participants in %s - %s', 'woocommerce-registrations' ),  $_product->parent->post->post_title, esc_html( apply_filters( 'woocommerce_variation_option_name', $date ) ) ) . '</h2>';
+							echo '<div class="registration">';
+							echo '<div class="registration-header">';
+							echo '<h4 class="registration-title">' .   $_product->parent->post->post_title . '</h4>';
+							echo '<p class="registration-date">' . sprintf( __( '%s', 'woocommerce-registrations' ), esc_html( apply_filters( 'woocommerce_variation_option_name', $date ) ) ) . '</p>';
+							echo '</div>';
 						} else {
-							echo '<div id="registrations_fields"><h2>' . sprintf( __( 'Participants in %s', 'woocommerce-registrations' ), $_product->parent->post->post_title ) . '</h2>';
+							echo '<div class="registration-header">';
+							echo '<div class="registration"><h4 class="registration-title">' . sprintf( __( '%s', 'woocommerce-registrations' ), $_product->parent->post->post_title ) . '</h4>';
+							echo '</div>';
 						}
 					}
 
-					echo "<h3>" . sprintf( __( 'Participant #%u', $registrations ), $registrations ) . '</h3>';
+					echo '<div class="registration-attendee">';
 
-					woocommerce_form_field( 'participant_name_' . $registrations , array(
+					echo "<h5>" . sprintf( __( 'Attendee #%u', 'woocommerce-registrations' ), $i ) . '</h5>';
+
+					echo '<div class="registration-fields">';
+					//Name
+					woocommerce_form_field( 'attendee_name_' . $registrations , array(
 						'type'          => 'text',
-						'class'         => array('participant-name form-row-wide'),
+						'class'         => array('attendee-name form-row-wide'),
 						'label'         => __( 'Name', 'woocommerce-registrations' ),
 						'placeholder'   => __( 'Mary Anna', 'woocommerce-registrations'),
-						), $checkout->get_value( 'participant_name_' . $registrations )
+						), $checkout->get_value( 'attendee_name_' . $registrations )
 					);
 
-					woocommerce_form_field( 'participant_surname_' . $registrations , array(
+					//Last Name
+					woocommerce_form_field( 'attendee_last_name_' . $registrations , array(
 						'type'          => 'text',
-						'class'         => array('participant-surname form-row-wide'),
+						'class'         => array('attendee-last-name form-row-wide'),
 						'label'         => __( 'Surname', 'woocommerce-registrations' ),
 						'placeholder'   => __( 'Smith', 'woocommerce-registrations'),
-					), $checkout->get_value( 'participant_surname_' . $registrations )
+					), $checkout->get_value( 'attendee_last_name_' . $registrations )
 					);
 
-					woocommerce_form_field( 'participant_email_' . $registrations , array(
+					//Email
+					woocommerce_form_field( 'attendee_email_' . $registrations , array(
 						'type'          => 'email',
-						'class'         => array('participant-email form-row-wide'),
+						'class'         => array('attendee-email form-row-wide'),
 						'label'         => __( 'Email', 'woocommerce-registrations' ),
 						'placeholder'   => __( 'mary@anna.com.br', 'woocommerce-registrations'),
-						), $checkout->get_value( 'participant_email_' . $registrations )
+						), $checkout->get_value( 'attendee_email_' . $registrations )
 					);
 
+					echo '</div>'; //fields
+					echo '</div>'; //attendees
+
+					//If it's the last product, closes the div
 					if( $i == $qty ) {
-						echo '</div>';
+						echo '</div>'; // .registration
 					}
+				}
+
+				if( $registrations == $qty_total ) {
+					echo '</div>'; // .registrations
 				}
 			}
 		}
 	}
 
+	/**
+	 * Process the registration checkout validating attendees name and emails
+	 */
 	public static function registrations_checkout_process() {
 		global $woocommerce;
 		$registrations = 1;
@@ -120,31 +148,39 @@ class WC_Registrations_Checkout {
 		foreach( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
 			$_product = $values['data'];
 
+			//Check if is the correct product type
 			if( $_product->is_type( 'variation' ) && $_product->parent->is_type( 'registrations' ) ) {
 				$qty = $values['quantity'];
 
+				//Loop through the quantity of the product in the cart
 				for( $i = 1; $i <= $qty; $i++, $registrations++ ) {
-					// Check if field is set, if it's not set add an error.
-					if ( ! $_POST['participant_name_' . $registrations ] ) {
-						wc_add_notice( sprintf( __( 'Please enter a correct name to participant #%u ', 'woocommerce-registrations' ), $registrations ) );
+					// Check if fields are set, if they are not set, add an error.
+					if ( ! $_POST['attendee_name_' . $registrations ] ) {
+						wc_add_notice( sprintf( __( 'Please enter a correct name to attendee #%u ', 'woocommerce-registrations' ), $registrations ), 'error' );
 					}
 
-					if ( ! $_POST['participant_email_' . $registrations ] ) {
-						wc_add_notice( sprintf( __( 'Please enter a correct email to participant #%u ', 'woocommerce-registrations' ), $registrations ) );
+					if ( ! $_POST['attendee_email_' . $registrations ] ) {
+						wc_add_notice( sprintf( __( 'Please enter a correct email to attendee #%u ', 'woocommerce-registrations' ), $registrations ), 'error' );
 					}
 				}
 			}
 		}
 	}
 
+	/**
+	 * Add attendees information to the order meta.
+	 *
+	 * @param int Order ID
+	 * @since 1.0
+	 */
 	public static function registrations_checkout_field_update_order_meta( $order_id ) {
 		global $woocommerce;
 		$registrations = 1;
 
-		// Loop trough cart items
+		// Loop trough the cart items
 		foreach( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
 			$_product = $values['data'];
-			$users = [];
+			$users = array();
 
 			// Check if is registration product type
 			if( $_product->is_type( 'variation' ) && $_product->parent->is_type( 'registrations' ) ) {
@@ -158,21 +194,21 @@ class WC_Registrations_Checkout {
 					$date = get_post_meta( $_product->variation_id, 'attribute_dates', true );
 					$date ? $meta_name = $title . ' - ' . $date : $meta_name = $title;
 
-					//Participant Name and Participant Email
-					if (! empty( $_POST['participant_name_' . $registrations ] ) &&
-					 	! empty( $_POST['participant_surname_' . $registrations ] ) &&
-						! empty( $_POST['participant_email_' . $registrations ] ) ) {
+					//Attendee Name and Attendee Email
+					if (! empty( $_POST['attendee_name_' . $registrations ] ) &&
+					 	! empty( $_POST['attendee_last_name_' . $registrations ] ) &&
+						! empty( $_POST['attendee_email_' . $registrations ] ) ) {
 
 						//Ckeck if it's not the first data to be added
 						if( $i !== 1 ) {
-							$meta_value .= ','. sanitize_text_field( $_POST['participant_name_' . $registrations ] );
-							$meta_value .= ','. sanitize_text_field( $_POST['participant_email_' . $registrations ] );
+							$meta_value .= ','. sanitize_text_field( $_POST['attendee_name_' . $registrations ] );
+							$meta_value .= ','. sanitize_text_field( $_POST['attendee_email_' . $registrations ] );
 						} else {
-							$meta_value = sanitize_text_field( $_POST['participant_name_' . $registrations ] );
-							$meta_value .= ','. sanitize_text_field( $_POST['participant_email_' . $registrations ] );
+							$meta_value = sanitize_text_field( $_POST['attendee_name_' . $registrations ] );
+							$meta_value .= ','. sanitize_text_field( $_POST['attendee_email_' . $registrations ] );
 						}
 
-						$user = WC_Registrations_Checkout::create_registration_user( sanitize_text_field( $_POST['participant_name_' . $registrations ] ), sanitize_text_field( $_POST['participant_surname_' . $registrations ] ), sanitize_text_field( $_POST['participant_email_' . $registrations ] ));
+						$user = WC_Registrations_Checkout::create_registration_user( sanitize_text_field( $_POST['attendee_name_' . $registrations ] ), sanitize_text_field( $_POST['attendee_last_name_' . $registrations ] ), sanitize_text_field( $_POST['attendee_email_' . $registrations ] ));
 
 						if( !empty( $user ) ) {
 							$users[] = $user;
@@ -193,15 +229,26 @@ class WC_Registrations_Checkout {
 		}
 	}
 
+	/**
+	 * Create a Groups group to the registration if Groups Plugin is active, and add the attendees to the group
+	 *
+	 * @param int Order ID
+	 * @since 1.0
+	 */
 	public static function create_registration_group( $group_name, $users ) {
 		// Check if Groups plugin is active
 		if ( is_plugin_active( 'groups/groups.php' ) ) {
 			Groups_Group::create( array( 'name' => $group_name ) );
+			$group = Groups_Group::read_by_name( $group_name );
 
-			if ( $group = Groups_Group::read_by_name( $group_name ) ) {
+			$group_id = null;
+
+			//Get group id
+			if ( !empty( $group ) ) {
 			    $group_id = $group->group_id;
 			}
 
+			//Add users to group
 			if( !empty( $group_id ) ) {
 				foreach( $users as $user_id ) {
 					Groups_User_Group::create( array( 'user_id' => $user_id, 'group_id' => $group_id ) );
@@ -210,29 +257,44 @@ class WC_Registrations_Checkout {
 		}
 	}
 
-	public static function create_registration_user( $name, $surname, $email ) {
+	/**
+	 * Create users for each attendee registered in checkout.
+	 *
+	 * @param string Attendee Name
+	 * @param string Attendee Laste Name
+	 * @param string Attendee Email
+	 * @since 1.0
+	 */
+	public static function create_registration_user( $name, $last_name, $email ) {
 		$user_id = username_exists( $email );
 
+		//Create user if user_id is not set (user not exists)
 		if ( !$user_id && email_exists( $email ) == false ) {
-			$random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
+			$random_password = wp_generate_password( $length = 12, $include_standard_special_chars = false );
 			$user_id = wp_create_user( $email, $random_password, $email );
 
 			if ( is_wp_error( $user_id ) ) {
 			    if (WP_DEBUG === true) {
 					$message = $user_id->get_error_message();
-			        error_log( print_r( $message, true ) );
 			    }
 				return false;
 			} else {
-				$user_id = wp_update_user( array( 'ID' => $user_id, 'first_name' => $name, 'last_name' => $surname ) );
+				$user_id = wp_update_user( array( 'ID' => $user_id, 'first_name' => $name, 'last_name' => $last_name ) );
 				wp_new_user_notification( $user_id, 'both' );
 				return $user_id;
 			}
 		} else {
-			return $user_id;
+			$user = get_user_by( 'email', $email );
+			return $user->ID;
 		}
 	}
 
+	/**
+	 * Display Attendees information into the admin order view
+	 *
+	 * @param object Current Order
+	 * @since 1.0
+	 */
 	public static function registrations_field_display_admin_order_meta( $order ){
 		foreach( $order->get_items() as $item ) {
 			$date = get_post_meta( $item['variation_id'], 'attribute_dates', true );
@@ -263,23 +325,6 @@ class WC_Registrations_Checkout {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Add endpoints for query vars
-	 */
-	public static function add_endpoints() {
-		add_rewrite_endpoint( 'activation', EP_ROOT | EP_PAGES );
-	}
-
-	public static function activation_template_redirect() {
-        global $wp_query;
-
-        // if this is not a request for activation or it's not a singular object then bail
-        if ( ! isset( $wp_query->query_vars['activation'] ) || !is_page() )
-            return;
-
-		include_once plugin_dir_path( __FILE__ ) . '../templates/registrations/registrations-user-activation.php';
 	}
 }
 
