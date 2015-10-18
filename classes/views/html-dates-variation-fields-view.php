@@ -31,8 +31,8 @@ if ( ! isset( $thepostid ) ) {
     </p>
     <p class="form-row form-row-last show_if_range_date">
         <label><?php _e( 'Days of Week when this event occurs.', 'woocommerce-registrations'); ?> <a class="tips" href="#">[?]</a></label>
-        <label><input type="checkbox" name="_week_days[<?php echo $loop; ?>][]" <?php if( in_array( 'monday', $week_days ) ) { echo 'checked'; } ?>    value="monday" /><?php _e( 'Monday', 'woocommerce-registrations' ); ?></label>
         <label><input type="checkbox" name="_week_days[<?php echo $loop; ?>][]" <?php if( in_array( 'sunday', $week_days ) ) { echo 'checked'; } ?>    value="sunday" /><?php _e( 'Sunday', 'woocommerce-registrations' ); ?></label>
+        <label><input type="checkbox" name="_week_days[<?php echo $loop; ?>][]" <?php if( in_array( 'monday', $week_days ) ) { echo 'checked'; } ?>    value="monday" /><?php _e( 'Monday', 'woocommerce-registrations' ); ?></label>
         <label><input type="checkbox" name="_week_days[<?php echo $loop; ?>][]" <?php if( in_array( 'tuesday', $week_days ) ) { echo 'checked'; } ?>   value="tuesday" /><?php _e( 'Tuesday', 'woocommerce-registrations' ); ?></label>
         <label><input type="checkbox" name="_week_days[<?php echo $loop; ?>][]" <?php if( in_array( 'wednesday', $week_days ) ) { echo 'checked'; } ?> value="wednesday" /><?php _e( 'Wednesday', 'woocommerce-registrations' ); ?></label>
         <label><input type="checkbox" name="_week_days[<?php echo $loop; ?>][]" <?php if( in_array( 'thursday', $week_days ) ) { echo 'checked'; } ?>  value="thursday" /><?php _e( 'Thursday', 'woocommerce-registrations' ); ?></label>
