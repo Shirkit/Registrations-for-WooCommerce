@@ -1,12 +1,12 @@
 <?php
 /**
- * Subscription Product Variation Class
+ * Registrations Product Variation Class
  *
- * The subscription product variation class extends the WC_Product_Variation product class
- * to create subscription product variations.
+ * The registration product variation class extends the WC_Product_Variable product class
+ * to create registration product variations.
  *
- * @class 		WC_Product_Subscription
- * @package		WooCommerce Subscriptions
+ * @class 		WC_Product_Registrations
+ * @package		WooCommerce Registrations
  * @category	Class
  * @since		1.3
  *
@@ -124,7 +124,9 @@ class WC_Product_Registrations extends WC_Product_Variable {
 						if( $date_option == '' ) {
 							$date_option .= date_i18n( 'l', strtotime( $opt->dates[ $i ] ) );
 						} else {
-							$date_option .= ', ' . date_i18n( 'l', strtotime( $opt->dates[ $i ] ) );
+							if( strpos( $date_option , date_i18n( 'l', strtotime( $opt->dates[ $i ] ) ) ) ) {
+								$date_option .= ', ' . date_i18n( 'l', strtotime( $opt->dates[ $i ] ) );
+							}
 						}
 					}
 
@@ -143,9 +145,9 @@ class WC_Product_Registrations extends WC_Product_Variable {
 							switch( $day ) {
 								case 'saturday': $content .= __( 'saturday', 'woocommerce-registrations' );
 								break;
-								case 'monday': $content .= __( 'monday', 'woocommerce-registrations' );
-								break;
 								case 'sunday': $content .= __( 'sunday', 'woocommerce-registrations' );
+								break;
+								case 'monday': $content .= __( 'monday', 'woocommerce-registrations' );
 								break;
 								case 'tuesday': $content .= __( 'tuesday', 'woocommerce-registrations' );
 								break;
