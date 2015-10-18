@@ -47,8 +47,8 @@ class WC_Registrations_Admin {
     /**
 	 * Adds all necessary admin styles.
 	 *
-	 * @param array Array of Product types & their labels, excluding the Subscription product type.
-	 * @return array Array of Product types & their labels, including the Subscription product type.
+	 * @param array Array of Product types & their labels, excluding the Registration product type.
+	 * @return array Array of Product types & their labels, including the Registration product type.
 	 * @since 1.0
 	 */
 	public static function enqueue_styles_scripts() {
@@ -146,11 +146,11 @@ class WC_Registrations_Admin {
 		do_action( 'woocommerce_registrations_after_variation', $loop, $variation_data, $variation );
 	}
 
-  /**
+  	/**
 	 * Save meta data for registration product type when the "Edit Product" form is submitted.
 	 *
-	 * @param array Array of Product types & their labels, excluding the Course product type.
-	 * @return array Array of Product types & their labels, including the Course product type.
+	 * @param array Array of Product types & their labels, excluding the Registration product type.
+	 * @return array Array of Product types & their labels, including the Registration product type.
 	 * @since 1.0
 	 */
 	public static function save_variable_fields( $post_id ) {
@@ -196,6 +196,13 @@ class WC_Registrations_Admin {
 		}
 	}
 
+	/**
+	 * Add the Dates tab to the product editor in admin
+	 *
+	 * @param array Array of product admin tabs
+	 * @return array Array of product admin tabs
+	 * @since 1.0
+	 */
 	public static function registration_dates_tab( $tabs ) {
 		// Adds the new dates tab
 		$tabs['dates'] = array(
@@ -207,15 +214,25 @@ class WC_Registrations_Admin {
 		return $tabs;
 	}
 
+	/**
+	 * Display the dates tab content
+	 *
+	 * @since 1.0
+	 */
     public static function show_dates_tab_content() {
 		include_once( 'views/html-dates-view.php' );
     }
 
+	/**
+	 * Filter variations options name
+	 *
+	 * @since 1.0
+	 */
 	public static function registration_variation_option_name( $option, $date_format = null ) {
 			if( $date_format == null ) {
 				$date_format = get_option( 'date_format' );
 			}
-			
+
 			$opt = json_decode( stripslashes( $option ) );
 			if( $opt ) {
 				return self::format_variations_dates( $opt, $date_format );
@@ -224,6 +241,11 @@ class WC_Registrations_Admin {
 			}
 	}
 
+	/**
+	 * Format JSON dates into date format defined in WordPress installation
+	 *
+	 * @since 1.0
+	 */
 	public static function format_variations_dates( $opt, $date_format ) {
 		if ( $opt ) {
 			if ( $opt->type == 'single' ) {
@@ -285,7 +307,7 @@ class WC_Registrations_Admin {
 				<h4><?php printf( __( '%sWooCommerce Registrations Installed%s &#8211; %sYou\'re ready to start selling registrations!%s', 'woocommerce-registrations' ), '<strong>', '</strong>', '<em>', '</em>' ); ?></h4>
 
 				<p class="submit">
-					<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.hastedesign.com.br/" data-text="Sell course and events registrations with #WooCommerce" data-via="HasteDesign" data-size="large">Tweet</a>
+					<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.hastedesign.com.br/" data-text="Now I can sell courses and events registrations with #WooCommerce" data-via="HasteDesign" data-size="large">Tweet</a>
 					<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 				</p>
 			</div>
