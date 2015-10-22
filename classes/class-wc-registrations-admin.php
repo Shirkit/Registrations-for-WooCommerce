@@ -268,7 +268,7 @@ class WC_Registrations_Admin {
 				return $date_option;
 
 			} elseif ( $opt->type == 'range' ) {
-				return date_i18n( $date_format, strtotime( $opt->dates[0] ) ) . __(' to ', 'woocommerce-registrations') . date_i18n( $date_format, strtotime( $opt->dates[1] ) );
+				return date_i18n( $date_format, strtotime( $opt->dates[0] ) ) . ' '. _x( 'to', 'From date to date', 'woocommerce-registrations' ) . ' ' . date_i18n( $date_format, strtotime( $opt->dates[1] ) );
 			} else {
 				return $opt;
 			}

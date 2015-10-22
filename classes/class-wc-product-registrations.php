@@ -81,7 +81,7 @@ class WC_Product_Registrations extends WC_Product_Variable {
 		$end = get_post_meta( $variation_id , '_event_end_time', true );
 
 		if( !empty( $start ) && !empty( $end ) ) {
-			$schedule = sprintf( __( 'From %s to %s' , 'woocommerce-registrations' ), $start, $end );
+			$schedule = sprintf( _x( 'From %s to %s' , 'From 00:00 to 10:00', 'woocommerce-registrations' ), $start, $end );
 			echo $schedule;
 		}
 	}

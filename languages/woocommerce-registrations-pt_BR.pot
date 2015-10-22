@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Registrations\n"
 "Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
-"POT-Creation-Date: 2015-10-06 18:21-0300\n"
+"POT-Creation-Date: 2015-10-22 20:03-0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Anyssa Ferreira <anyssa@hastedesign.com.br>\n"
 "Language-Team: Haste <contato@hastedesign.com.br>\n"
@@ -70,6 +70,7 @@ msgstr ""
 
 #: classes/class-wc-product-registrations.php:84
 #, php-format
+msgctxt "From 00:00 to 10:00"
 msgid "From %s to %s"
 msgstr "Das %s às %s"
 
@@ -110,7 +111,8 @@ msgid "Dates"
 msgstr "Datas"
 
 #: classes/class-wc-registrations-admin.php:271
-msgid " to "
+msgctxt "From date to date"
+msgid "to"
 msgstr "até"
 
 #: classes/class-wc-registrations-admin.php:307
@@ -130,41 +132,47 @@ msgstr "Detalhes dos participantes"
 msgid "Provide the details of each participant"
 msgstr "Forneça os detalhes de cada participante"
 
-#: classes/class-wc-registrations-checkout.php:89
+#: classes/class-wc-registrations-checkout.php:84
+#: classes/class-wc-registrations-checkout.php:88
+#, php-format
+msgid "%s"
+msgstr ""
+
+#: classes/class-wc-registrations-checkout.php:95
 #, php-format
 msgid "Attendee #%u"
 msgstr "Participante #%u"
 
-#: classes/class-wc-registrations-checkout.php:96
+#: classes/class-wc-registrations-checkout.php:102
 msgid "Name"
 msgstr "Nome"
 
-#: classes/class-wc-registrations-checkout.php:97
+#: classes/class-wc-registrations-checkout.php:103
 msgid "Mary Anna"
 msgstr "Maria Aparecida"
 
-#: classes/class-wc-registrations-checkout.php:105
+#: classes/class-wc-registrations-checkout.php:111
 msgid "Surname"
 msgstr "Sobrenome"
 
-#: classes/class-wc-registrations-checkout.php:106
+#: classes/class-wc-registrations-checkout.php:112
 msgid "Smith"
 msgstr "da Silva"
 
-#: classes/class-wc-registrations-checkout.php:114
+#: classes/class-wc-registrations-checkout.php:120
 msgid "Email"
 msgstr "Email"
 
-#: classes/class-wc-registrations-checkout.php:115
+#: classes/class-wc-registrations-checkout.php:121
 msgid "mary@anna.com.br"
 msgstr "maria@aparecida.com.br"
 
-#: classes/class-wc-registrations-checkout.php:152
+#: classes/class-wc-registrations-checkout.php:159
 #, php-format
 msgid "Please enter a correct name to attendee #%u "
 msgstr "Por favor entre com um nome válido para o participante #%u"
 
-#: classes/class-wc-registrations-checkout.php:156
+#: classes/class-wc-registrations-checkout.php:163
 #, php-format
 msgid "Please enter a correct email to attendee #%u "
 msgstr "Por favor entre com um email válido para o participante #%u"
@@ -183,11 +191,11 @@ msgstr "Dias da semana em que o evento ocorrerá."
 
 #: classes/views/html-dates-variation-fields-view.php:34
 msgid "Sunday"
-msgstr "Segunda-Feira"
+msgstr "Domingo"
 
 #: classes/views/html-dates-variation-fields-view.php:35
 msgid "Monday"
-msgstr "Segunda"
+msgstr "Segunda-Feira"
 
 #: classes/views/html-dates-variation-fields-view.php:36
 msgid "Tuesday"
@@ -259,7 +267,7 @@ msgstr "Das"
 
 #: classes/views/html-dates-view.php:85 classes/views/html-dates-view.php:164
 msgid "to"
-msgstr "às"
+msgstr "à"
 
 #: classes/views/html-dates-view.php:94
 msgid "Please set the end date after the start date."
@@ -302,6 +310,9 @@ msgstr "Ese produto está atualmente indisponível."
 #: templates/single-product/add-to-cart/registration.php:35
 msgid "Clear selection"
 msgstr "Limpar seleção"
+
+#~ msgid " to "
+#~ msgstr "até"
 
 #~ msgid "Participants in %s - %s"
 #~ msgstr "Participantes em %s - %s"
